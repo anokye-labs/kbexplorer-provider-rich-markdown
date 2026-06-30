@@ -1,0 +1,43 @@
+{
+  "name": "@anokye-labs/kbexplorer-provider-rich-markdown",
+  "version": "0.1.0",
+  "description": "Loadable kbexplorer provider that ingests a rich Markdown document into a KBGraph fragment",
+  "type": "module",
+  "exports": {
+    ".": "./src/providers/rich-markdown.js",
+    "./lib": "./src/lib/rich-markdown.js"
+  },
+  "main": "./src/providers/rich-markdown.js",
+  "files": [
+    "src",
+    "docs",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.js"
+  },
+  "keywords": [
+    "kbexplorer",
+    "provider",
+    "markdown",
+    "knowledge-graph",
+    "knowledge-base"
+  ],
+  "author": "Anokye Labs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anokye-labs/kbexplorer-provider-rich-markdown.git"
+  },
+  "homepage": "https://github.com/anokye-labs/kbexplorer-provider-rich-markdown",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@anokye-labs/kbexplorer-core": "github:anokye-labs/kbexplorer-core#v0.1.0"
+  }
+}
