@@ -244,29 +244,34 @@ describe('makeSourceRef (interim — core#23)', () => {
 });
 
 describe('ingestRichMarkdown — identity', () => {
-  it('mints an OPAQUE address (no type in body) from frontmatter id', () => {
+  it('emits a local slug id DISTINCT from the canonical identity address (template#445 / #4)', () => {
     const { nodes } = ingestRichMarkdown({
       content: '---\nid: my-doc\nentityType: report\n---\nbody',
       path: 'docs/a.md',
       identity: { scheme: 'kg', authority: 'docs' },
     });
     const node = nodes[0];
-    assert.equal(node.id, buildAddress('my-doc', { scheme: 'kg', authority: 'docs' }));
-    assert.equal(node.identity, node.id);
-    const parsed = parseAddress(node.id, { authority: 'docs' });
+    // `id` is the stable local slug — the identity-address body itself…
+    assert.equal(node.id, 'my-doc');
+    // …and `identity` is the canonical OPAQUE address minted from that body.
+    assert.equal(node.identity, buildAddress('my-doc', { scheme: 'kg', authority: 'docs' }));
+    assert.notEqual(node.identity, node.id);
+    const parsed = parseAddress(node.identity, { authority: 'docs' });
     assert.equal(parsed.scheme, 'kg');
     assert.equal(parsed.authority, 'docs');
     assert.equal(parsed.body, 'my-doc');
     assert.ok(!parsed.body.includes('/'), 'opaque body must not encode a type segment');
-    // The declared type is carried as an attribute, never in the id.
+    // The declared type is carried as an attribute, never in the identity.
     assert.equal(node.entityType, 'report');
-    assert.equal(node.jsonld['@id'], node.id);
+    // The identity address is always reused as the JSON-LD @id (core contract).
+    assert.equal(node.jsonld['@id'], node.identity);
     assert.equal(node.jsonld['@type'], 'report');
   });
 
   it('falls back to a slug of the path when no frontmatter id', () => {
     const { nodes } = ingestRichMarkdown({ content: 'no frontmatter here', path: 'docs/My File.md' });
-    assert.equal(nodes[0].id, buildAddress('my-file'));
+    assert.equal(nodes[0].id, 'my-file');
+    assert.equal(nodes[0].identity, buildAddress('my-file'));
   });
 
   it('respects a configurable scheme with no authority', () => {
@@ -274,7 +279,20 @@ describe('ingestRichMarkdown — identity', () => {
       content: '---\nid: d\n---\n',
       identity: { scheme: 'org-kb' },
     });
-    assert.equal(nodes[0].id, 'org-kb://d');
+    assert.equal(nodes[0].id, 'd');
+    assert.equal(nodes[0].identity, 'org-kb://d');
+  });
+
+  it('derives the id deterministically from the identity body (same slug across configs)', () => {
+    const a = ingestRichMarkdown({ content: '---\nid: doc-x\n---\n' }).nodes[0];
+    const b = ingestRichMarkdown({
+      content: '---\nid: doc-x\n---\n',
+      identity: { scheme: 'kb', authority: 'corp' },
+    }).nodes[0];
+    // The local id never varies with addressing config; only identity does.
+    assert.equal(a.id, 'doc-x');
+    assert.equal(b.id, 'doc-x');
+    assert.notEqual(a.identity, b.identity);
   });
 });
 
@@ -317,7 +335,7 @@ describe('ingestRichMarkdown — full ingest of the committed fixture', () => {
     }
   });
 
-  it('produces typed edges from links + frontmatter, all rooted at the node identity', () => {
+  it('produces typed edges from links + frontmatter, all rooted at the node id', () => {
     const { nodes, edges } = ingestRichMarkdown(input);
     const id = nodes[0].id;
     const byTo = Object.fromEntries(edges.map((e) => [e.to, e]));

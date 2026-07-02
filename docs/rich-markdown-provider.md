@@ -22,17 +22,26 @@ one node plus its typed edges — on top of the released
 | **Typed edges** | `ProviderResult.edges` | From Markdown links and the annotated `[..](urn){rel=..}` form. Relations are mapped onto the core six-relation taxonomy via `mapRelation`. |
 | **Links (all)** | `node.data.richMarkdown.links[]` | Every link is recorded for provenance; `emitEdge` flags which become edges. |
 
-### Identity (core v0.1.0)
+### Identity
 
-The node id is minted with **`buildAddress(body, { scheme, authority })`**. The
-body is **opaque** — it never encodes the entity's type — so a node can be
-re-typed without its identifier changing. The body is the frontmatter `id`
-(verbatim) or, absent that, a slug of the source path/title. A declared type
-(`entityType` / `@type` in frontmatter) is carried as an attribute
-(`node.entityType` + `node.jsonld['@type']`), never in the id.
+Every node carries **two distinct identifiers** (kbexplorer-template#445 /
+provider #4 — earlier releases collapsed them to one value):
+
+- **`node.id`** — the stable, provider-local slug: the identity-address *body*
+  itself (the frontmatter `id` verbatim or, absent that, a slug of the source
+  path/title). It never varies with addressing config, and edges reference the
+  node by it.
+- **`node.identity`** — the canonical cross-provider address, minted with
+  **`buildAddress(body, { scheme, authority })`** from that same body. The body
+  is **opaque** — it never encodes the entity's type — so a node can be
+  re-typed without its identifier changing. A declared type (`entityType` /
+  `@type` in frontmatter) is carried as an attribute (`node.entityType` +
+  `node.jsonld['@type']`), never in the identity. The identity address is
+  always reused as the JSON-LD `@id`.
 
 ```
-kg://docs/rich-markdown-sample        # scheme=kg, authority=docs, body=rich-markdown-sample (opaque)
+rich-markdown-sample                  # node.id (local slug = the opaque body)
+kg://docs/rich-markdown-sample        # node.identity: scheme=kg, authority=docs
 ```
 
 Scheme/authority resolve from the provider `options`, then the KB's
