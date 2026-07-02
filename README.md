@@ -8,7 +8,7 @@ future canvas) loads it through the `config.yaml` → `defineProvider()` seam.
 
 It depends only on the shared-contracts package
 [`@anokye-labs/kbexplorer-core`](https://github.com/anokye-labs/kbexplorer-core)
-(`v0.1.0`). The filesystem boundary lives in the provider; the parsing/extraction
+(`v0.3.0`). The filesystem boundary lives in the provider; the parsing/extraction
 core is pure (no I/O, no network, no LLM — identical input → byte-identical
 output).
 
