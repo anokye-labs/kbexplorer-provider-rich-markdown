@@ -80,12 +80,14 @@ describe('rich-markdown provider — resolve()', () => {
     assert.ok(edges.length >= 3);
   });
 
-  it('applies config.identity scheme/authority to the minted address', async () => {
+  it('applies config.identity scheme/authority to the minted identity address', async () => {
     const p = provider({ options: { content: INLINE } });
     const { nodes } = await p.resolve({
       config: { identity: { scheme: 'kb', authority: 'corp' } },
     });
-    assert.equal(nodes[0].id, buildAddress('inline-doc', { scheme: 'kb', authority: 'corp' }));
+    // The local id stays the plain slug; the addressing config shapes identity.
+    assert.equal(nodes[0].id, 'inline-doc');
+    assert.equal(nodes[0].identity, buildAddress('inline-doc', { scheme: 'kb', authority: 'corp' }));
   });
 
   it('lets provider options override config.identity', async () => {
@@ -93,7 +95,8 @@ describe('rich-markdown provider — resolve()', () => {
     const { nodes } = await p.resolve({
       config: { identity: { scheme: 'kb', authority: 'corp' } },
     });
-    assert.equal(nodes[0].id, buildAddress('inline-doc', { scheme: 'org-kb', authority: 'docs' }));
+    assert.equal(nodes[0].id, 'inline-doc');
+    assert.equal(nodes[0].identity, buildAddress('inline-doc', { scheme: 'org-kb', authority: 'docs' }));
   });
 });
 

@@ -720,7 +720,17 @@ export function ingestRichMarkdown(input = {}) {
       ? String(frontmatter.title)
       : deriveTitle(body, path ? basename(path, extname(path)) : 'Untitled');
 
+  // Two DISTINCT identifiers (kbexplorer-template#445 / provider #4):
+  //  - `id`      — the stable, provider-local slug (the identity-address body,
+  //                derived deterministically from frontmatter id / path / title);
+  //  - `identity`— the canonical cross-provider address minted by core's
+  //                buildAddress from that same body.
+  // They answer different questions (local graph key vs merge key) and were
+  // collapsed (`id === identity`) in v0.1.0, which defeated identity's purpose
+  // downstream. Edges reference the node by its local `id`, which also matches
+  // how in-document links address other docs (plain slugs).
   const idBody = identityBody(frontmatter, path, title);
+  const id = idBody;
   const identity = buildAddress(idBody, {
     scheme: identityOpts.scheme,
     authority: identityOpts.authority,
@@ -757,7 +767,7 @@ export function ingestRichMarkdown(input = {}) {
     }));
 
   const node = {
-    id: identity,
+    id,
     title,
     cluster: String(cluster),
     content: '',
@@ -799,7 +809,9 @@ export function ingestRichMarkdown(input = {}) {
     if (seen.has(key)) return;
     seen.add(key);
     edges.push({
-      from: identity,
+      // Edges reference the node by its local graph id (hosts match edge
+      // endpoints against node ids, not identities).
+      from: id,
       to: String(to),
       type: 'references',
       description: description || '',
