@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/anokye-labs/kbexplorer-provider-rich-markdown",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"
