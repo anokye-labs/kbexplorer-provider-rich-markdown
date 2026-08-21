@@ -1,6 +1,6 @@
 {
   "name": "@anokye-labs/kbexplorer-provider-rich-markdown",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Loadable kbexplorer provider that ingests a rich Markdown document into a KBGraph fragment",
   "type": "module",
   "exports": {
@@ -38,6 +38,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@anokye-labs/kbexplorer-core": "^0.5.1"
+    "@anokye-labs/kbexplorer-core": "^0.6.0"
   }
 }
