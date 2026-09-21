@@ -49,7 +49,9 @@ const fragment = ingestRichMarkdown({ content: markdownString, cluster: 'docs' }
 ```
 
 See [`docs/rich-markdown-provider.md`](docs/rich-markdown-provider.md) for the
-full configuration reference and
+full configuration reference,
+[`docs/rich-markdown-architecture.md`](docs/rich-markdown-architecture.md) for
+the provider/KBX architecture and lifecycle contract, and
 [`docs/samples/rich-markdown-sample.md`](docs/samples/rich-markdown-sample.md)
 for a worked example.
 
