@@ -8,9 +8,9 @@ future canvas) loads it through the `config.yaml` → `defineProvider()` seam.
 
 It depends only on the shared-contracts package
 [`@anokye-labs/kbexplorer-core`](https://github.com/anokye-labs/kbexplorer-core)
-(`v0.3.0`). The filesystem boundary lives in the provider; the parsing/extraction
-core is pure (no I/O, no network, no LLM — identical input → byte-identical
-output).
+(`^0.6.0`). The filesystem boundary lives in the provider; the
+parsing/extraction core is pure (no I/O, no network, no LLM — identical input
+→ byte-identical output).
 
 ## Install
 
@@ -49,7 +49,9 @@ const fragment = ingestRichMarkdown({ content: markdownString, cluster: 'docs' }
 ```
 
 See [`docs/rich-markdown-provider.md`](docs/rich-markdown-provider.md) for the
-full configuration reference and
+full configuration reference,
+[`docs/rich-markdown-architecture.md`](docs/rich-markdown-architecture.md) for
+the provider/KBX architecture and lifecycle contract, and
 [`docs/samples/rich-markdown-sample.md`](docs/samples/rich-markdown-sample.md)
 for a worked example.
 
