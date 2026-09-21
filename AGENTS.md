@@ -4,7 +4,7 @@
 provider**: it ingests one rich Markdown document into a `KBGraph` fragment. It
 is pluggable infrastructure (same category as an iCal or dot-graph reader) and is
 loaded by hosts through the `config.yaml` → `defineProvider()` seam. It depends
-ONLY on `@anokye-labs/kbexplorer-core` (`v0.3.0`).
+ONLY on `@anokye-labs/kbexplorer-core` (`^0.6.0`).
 
 Keep the parsing/extraction **library** (`src/lib/`) pure — no filesystem, no
 network, no LLM, identical input → byte-identical output. The only I/O boundary
